@@ -1,0 +1,14 @@
+{
+  "name": "it-desk-uem-pki-public",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Validation and publication controls for public IT-Desk UEM PKI artifacts.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test scripts/validate-publication.test.mjs",
+    "validate": "node scripts/validate-publication.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

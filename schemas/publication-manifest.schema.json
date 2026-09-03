@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/rudrarajuramar-tech/it-desk-uem-pki-public/main/schemas/publication-manifest.schema.json",
+  "title": "IT-Desk UEM public PKI publication manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "publication", "status", "origin", "artifacts"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "publication": { "const": "it-desk-uem-pki-public-v1" },
+    "status": { "enum": ["bootstrap-no-ca-material", "active"] },
+    "origin": { "const": "https://rudrarajuramar-tech.github.io/it-desk-uem-pki-public" },
+    "artifacts": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/certificate" },
+          { "$ref": "#/$defs/crl" }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "base": {
+      "type": "object",
+      "required": ["path", "type", "sha256"],
+      "properties": {
+        "path": { "type": "string", "pattern": "^pki/(root|issuing)/itdesk-uem-[a-z0-9-]+\\.(der|crl)$" },
+        "type": { "enum": ["root-certificate", "root-crl", "issuing-certificate", "issuing-crl"] },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "certificate": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "type", "sha256", "fingerprintSha256", "serialHex", "notBefore", "notAfter"],
+          "properties": {
+            "path": { "type": "string" },
+            "type": { "enum": ["root-certificate", "issuing-certificate"] },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "fingerprintSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "serialHex": { "type": "string", "pattern": "^[1-9a-f][a-f0-9]{15,63}$" },
+            "notBefore": { "type": "string", "format": "date-time" },
+            "notAfter": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    },
+    "crl": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "type", "sha256", "issuerFingerprintSha256", "crlNumber", "thisUpdate", "nextUpdate"],
+          "properties": {
+            "path": { "type": "string" },
+            "type": { "enum": ["root-crl", "issuing-crl"] },
+            "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "issuerFingerprintSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "crlNumber": { "type": "string", "pattern": "^[1-9a-f][a-f0-9]{0,31}$" },
+            "thisUpdate": { "type": "string", "format": "date-time" },
+            "nextUpdate": { "type": "string", "format": "date-time" }
+          }
+        }
+      ]
+    }
+  }
+}
