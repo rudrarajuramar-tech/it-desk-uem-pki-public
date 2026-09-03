@@ -1,0 +1,23 @@
+# Private-key and identity containers are never public artifacts.
+*.key
+*.pem
+*.pfx
+*.p12
+*.p8
+*.pk8
+*.jks
+*.keystore
+*.csr
+*.req
+*.srl
+
+# Credentials and local tooling state.
+.env
+.env.*
+credentials*
+secrets/
+private/
+node_modules/
+*.log
+*.tmp
+*.bak
